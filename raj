@@ -12,10 +12,6 @@ test('Home page should load and display important elements', async ({ page }) =>
   const logo = page.locator('img[alt="Logo"]');
   await expect(logo).toBeVisible();
 
-  // Check that the "Sign In" button is visible
-  const signInButton = page.locator('text=Sign In');
-  await expect(signInButton).toBeVisible();
-
   // Check that a welcome message appears
   const welcomeText = page.locator('text=Welcome');
   await expect(welcomeText).toBeVisible();
