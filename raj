@@ -1,18 +1,77 @@
-// homePage.spec.js
-import { test, expect } from '@playwright/test';
+# Simple Net Banking Simulation
 
-test('Home page should load and display important elements', async ({ page }) => {
-  // Go to the home page
-  await page.goto('https://example.com/');
+class BankAccount:
+    def __init__(self, user_name, password, balance=0):
+        self.user_name = user_name
+        self.password = password
+        self.balance = balance
 
-  // Check that the page title contains "Home" or "Example Domain"
-  await expect(page).toHaveTitle(/Example/);
+    def login(self, username, password):
+        return self.user_name == username and self.password == password
 
-  // Check that the logo is visible
-  const logo = page.locator('img[alt="Logo"]');
-  await expect(logo).toBeVisible();
+    def check_balance(self):
+        print(f"Your current balance is ₹{self.balance}")
 
-  // Check that a welcome message appears
-  const welcomeText = page.locator('text=Welcome');
-  await expect(welcomeText).toBeVisible();
-});
+    def deposit(self, amount):
+        if amount > 0:
+            self.balance += amount
+            print(f"₹{amount} deposited successfully.")
+        else:
+            print("Invalid deposit amount!")
+
+    def withdraw(self, amount):
+        if amount > 0 and amount <= self.balance:
+            self.balance -= amount
+            print(f"₹{amount} withdrawn successfully.")
+        else:
+            print("Insufficient balance or invalid amount!")
+
+    def transfer(self, receiver, amount):
+        if amount > 0 and amount <= self.balance:
+            self.balance -= amount
+            receiver.balance += amount
+            print(f"₹{amount} transferred successfully to {receiver.user_name}")
+        else:
+            print("Insufficient balance or invalid amount!")
+
+
+# --- Sample Usage ---
+
+# Create two accounts
+account1 = BankAccount("rajaram", "password123", 10000)
+account2 = BankAccount("friend", "pass456", 5000)
+
+# Simulate login
+username = input("Enter username: ")
+password = input("Enter password: ")
+
+if account1.login(username, password):
+    print("\nLogin successful!\n")
+    while True:
+        print("\nChoose an operation:")
+        print("1. Check Balance")
+        print("2. Deposit Money")
+        print("3. Withdraw Money")
+        print("4. Transfer Money")
+        print("5. Exit")
+
+        choice = input("Enter choice: ")
+
+        if choice == '1':
+            account1.check_balance()
+        elif choice == '2':
+            amount = float(input("Enter amount to deposit: "))
+            account1.deposit(amount)
+        elif choice == '3':
+            amount = float(input("Enter amount to withdraw: "))
+            account1.withdraw(amount)
+        elif choice == '4':
+            amount = float(input("Enter amount to transfer: "))
+            account1.transfer(account2, amount)
+        elif choice == '5':
+            print("Thank you for using Net Banking. Goodbye!")
+            break
+        else:
+            print("Invalid choice! Please try again.")
+else:
+    print("\nLogin failed. Please check your username or password.")
